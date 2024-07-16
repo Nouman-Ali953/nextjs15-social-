@@ -24,6 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <div className="w-full bg-white px-4 md:px-8 lg:px-16 xl:px-32 xls:px-64">
+          navbar
+        </div>
         {children}
       </body>
     </html>
