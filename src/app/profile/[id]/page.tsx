@@ -1,9 +1,9 @@
+import AddPost from "@/app/components/home/AddPost";
+import Feed from "@/app/components/home/Feed";
+import LeftMenu from "@/app/components/home/LeftMenu";
+import RightMenu from "@/app/components/home/RightMenu";
+import PersonMainProfile from "@/app/components/profile/PersonMainProfile";
 import React from "react";
-import LeftMenu from "./components/home/LeftMenu";
-import Stories from "./components/home/Stories";
-import RightMenu from "./components/home/RightMenu";
-import AddPost from "./components/home/AddPost";
-import Feed from "./components/home/Feed";
 
 const page = () => {
   return (
@@ -13,9 +13,9 @@ const page = () => {
       </div>
       <div className="w-full lg:w-[70%] xl:w-[50%]">
         <div className="flex flex-col gap-6 w-full">
-          <Stories />
-          <AddPost/>
-          <Feed/>
+          <PersonMainProfile />
+          <AddPost />
+          <Feed />
         </div>
       </div>
       <div className="hidden md:hidden xl:block w-[30%]">
