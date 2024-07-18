@@ -16,7 +16,7 @@ const AddPost = () => {
             />
             <textarea
               placeholder="What's on your mind..."
-              className="flex-1 bg-slate-100 px-2 pt-1 rounded-md h-11 text-sm"
+              className="flex-1 bg-slate-100 px-2 pt-1 rounded-md h-11 text-sm outline-none"
             ></textarea>
             <Image
               src="/emoji.png"

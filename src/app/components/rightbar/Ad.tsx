@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 const Ad = () => {
+ 
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-4 ">
       <div className="flex flex-row justify-between items-center">
@@ -16,7 +17,7 @@ const Ad = () => {
           className="w-3 h-3 rounded-full cursor-pointer"
         />
       </div>
-      <div className="relative w-full h-44">
+      <div className={`relative w-full h-44`}>
         <Image
           src="https://images.pexels.com/photos/674475/pexels-photo-674475.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="imgd"
