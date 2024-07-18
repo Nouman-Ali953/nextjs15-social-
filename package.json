@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.2.3",
+    "@prisma/client": "^5.17.0",
+    "mysql": "^2.18.1",
     "next": "15.0.0-rc.0",
     "prisma": "^5.17.0",
     "react": "19.0.0-rc-f994737d14-20240522",
