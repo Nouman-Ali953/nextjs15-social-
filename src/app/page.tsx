@@ -8,17 +8,17 @@ import Feed from "./components/home/Feed";
 const page = () => {
   return (
     <div className="flex gap-4 pt-6">
-      <div className="hidden lg:block xl:block w-[20%]">
+      <div className="hidden lg:block xl:block w-[25%]">
         <LeftMenu />
       </div>
-      <div className="w-full lg:w-[80%] xl:w-[57%]">
+      <div className="w-full lg:w-[70%] xl:w-[50%]">
         <div className="flex flex-col gap-6 w-full">
           <Stories />
           <AddPost/>
           <Feed/>
         </div>
       </div>
-      <div className="hidden md:hidden xl:block w-[20%]">
+      <div className="hidden md:hidden xl:block w-[25%]">
         <RightMenu />
       </div>
     </div>

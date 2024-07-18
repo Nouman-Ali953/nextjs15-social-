@@ -30,12 +30,12 @@ const Comment = () => {
           various text elements within your Next.js and Tailwind CSS project.
         </p>
         <div className="flex flex-row gap-6 items-center">
-          <div className="ml-[3.3rem] mt-3 w-32 cursor-pointer flex flex-row gap-2 items-center bg-slate-100 px-2 rounded-xl justify-center py-[2px]">
+          <div className="ml-[3.3rem] mt-2 w-18 cursor-pointer flex flex-row gap-2 items-center bg-slate-100 px-[8px] rounded-xl justify-center py-[1px]">
             <Image src="/like.png" alt="like" width={15} height={15} />
-            <span className="mb-1 text-sm">|</span>
-            <span className="text-sm">12 Likes</span>
+            <span className="mb-1 text-sm text-gray-300">|</span>
+            <span className="text-[0.75rem]">12</span>
           </div>
-          <span className="text-sm text-gray-400 mt-2 space-x-1">Reply</span>
+          <span className="text-[0.75rem] text-gray-400 mt-2 space-x-1">Reply</span>
         </div>
       </div>
   )

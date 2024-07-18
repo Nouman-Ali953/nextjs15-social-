@@ -27,10 +27,10 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className="w-full bg-white px-4 md:px-8 lg:px-12 xl:px-28 2xl:px-64">
+        <div className="w-full bg-white px-4 md:px-8 lg:px-12 xl:px-24 2xl:px-64">
           <Navbar/>
         </div>
-        <div className="bg-slate-100 px-4 md:px-8 lg:px-12 xl:px-28 2xl:px-64">
+        <div className="bg-slate-100 px-4 md:px-8 lg:px-12 xl:px-24 2xl:px-64">
         {children}
         </div>
       </body>
