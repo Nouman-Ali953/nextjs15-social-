@@ -1,7 +1,31 @@
+import prisma from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import React from "react";
 
 const AddPost = () => {
+  const { userId } = auth();
+
+  console.log(userId);
+  const initialTest = async (formdata: FormData) => {
+    "use server";
+    const desc = formdata.get("desc") as string;
+    if (!userId) {
+      return;
+    }
+    try {
+      const response = await prisma.post.create({
+        data: {
+          userId: userId,
+          desc: desc,
+        },
+      });
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="p-2 bg-white rounded-lg shadow-md ">
@@ -14,17 +38,24 @@ const AddPost = () => {
               height={28}
               className="rounded-full cursor-pointer w-11 h-11"
             />
-            <textarea
-              placeholder="What's on your mind..."
-              className="flex-1 bg-slate-100 px-2 pt-1 rounded-md h-11 text-sm outline-none"
-            ></textarea>
-            <Image
-              src="/emoji.png"
-              alt="imag"
-              width={16}
-              height={16}
-              className="self-end cursor-pointer"
-            />
+            <form
+              action={initialTest}
+              className="flex flex-row w-full gap-4 px-4"
+            >
+              <textarea
+                placeholder="What's on your mind..."
+                name="desc"
+                className="flex-1 bg-slate-100 px-2 pt-1 rounded-md h-11 text-sm outline-none"
+              ></textarea>
+              <Image
+                src="/emoji.png"
+                alt="imag"
+                width={16}
+                height={16}
+                className="self-end cursor-pointer"
+              />
+              <button>send</button>
+            </form>
           </div>
           <div className="flex flex-row flex-wrap items-center gap-6 ml-[4.8rem]">
             <div className="flex flex-row gap-1 justify-center items-center cursor-pointer">
