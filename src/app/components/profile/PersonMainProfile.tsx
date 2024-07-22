@@ -3,28 +3,11 @@ import prisma from "@/lib/client";
 import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
-interface User {
-  id: string;
-  username: string;
-  avatar: string | null;
-  cover: string | null;
-  name: string | null;
-  surname: string | null;
-  description: string | null;
-  city: string | null;
-  school: string | null;
-  work: string | null;
-  website: string | null;
-  createdAt: Date;
-}
-interface PersonMainProfileProps {
-  basePath: string;
-}
 
-const PersonMainProfile: React.FC<PersonMainProfileProps> = async ({
-  basePath,
-}) => {
+
+const PersonMainProfile = async ({basePath}:{basePath:string}) => {
   const { userId } = auth();
   if (!userId) {
     return null;
@@ -33,7 +16,20 @@ const PersonMainProfile: React.FC<PersonMainProfileProps> = async ({
     where: {
       id: userId,
     },
+    include: {
+      _count: {
+        select: {
+          followers: true,
+          followings:true,
+          posts:true
+        },
+      },
+      
+    },
   });
+  if (!user) {
+    return notFound();
+  }
 
   return (
     <div className="bg-transparent flex flex-col gap-10 pt-0">
@@ -46,7 +42,7 @@ const PersonMainProfile: React.FC<PersonMainProfileProps> = async ({
             className="object-cover rounded-lg"
           />
         </div>
-        <div className="relative w-full flex flex-col gap-2 items-center">
+        <div className="relative w-full flex flex-col gap-2 items-center bg-white">
           <Image
             src={user?.avatar || "/noAvatar.png"}
             alt="userimage"
@@ -57,11 +53,13 @@ const PersonMainProfile: React.FC<PersonMainProfileProps> = async ({
             } object-cover absolute left-0 right-0 mx-auto rounded-full  ring-4`}
           />
           <span
-            className={`w-32 h-24 absolute left-6 right-0 mx-auto  ${
+            className={`w-32 h-24 absolute left-0 right-0 mx-auto  ${
               basePath ? "mt-12" : "mt-6"
-            } font-bold text-lg`}
+            } font-bold text-lg text-center` }
           >
-            Elva Weaver
+            {user.name && user.surname
+            ? user.name + " " + user.surname
+            : user.username}
           </span>
         </div>
       </div>
@@ -73,26 +71,26 @@ const PersonMainProfile: React.FC<PersonMainProfileProps> = async ({
         }  mt-10 pl-2  `}
       >
         <div className="flex flex-col justify-start items-center text-sm font-semibold">
-          <span className="text-sm">142</span>
+          <span className="text-sm">{user._count.posts}</span>
           <p className="text-[.7rem] text-gray-500">Posts</p>
         </div>
         <div className="flex flex-col justify-start items-center text-sm font-semibold">
-          <span className="text-sm">1.4K</span>
+          <span className="text-sm">{user._count.followers}</span>
           <p className="text-[.7rem] text-gray-500">Followers</p>
         </div>
         <div className="flex flex-col justify-start items-center text-sm font-semibold">
-          <span className="text-sm">120</span>
+          <span className="text-sm">{user._count.followings}</span>
           <p className="text-[.7rem] text-gray-500">Followings</p>
         </div>
       </div>
 
       <div className={`${basePath ? "hidden" : "flex"} w-full`}>
-        <p className="w-full text-center mt-3 text-[.75rem]">500 followers</p>
+        <p className="w-full text-center mt-3 text-[.75rem]">{user._count.followers} followers</p>
       </div>
       <div
         className={`${basePath ? "hidden" : "flex"} w-full relative bottom-8`}
       >
-        <Link href="/profile/sdf" className="w-full">
+        <Link href={`/profile/${user.username}`} className="w-full">
           <button className="mb-5 w-full text-[.79rem] bg-blue-500 py-[.28rem] rounded-[3px] px-2 text-white tracking-wide">
             My Profile
           </button>

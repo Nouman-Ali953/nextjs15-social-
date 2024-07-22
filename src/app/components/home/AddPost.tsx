@@ -1,11 +1,26 @@
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import React from "react";
 
 const AddPost = () => {
   const { userId } = auth();
-
+  if (!userId) {
+    return null;
+  }
+  const addPost = async (formData:FormData) => {
+    "use server"
+    const desc = formData.get('desc') as string;
+    const post = await prisma.post.create({
+      data:{
+        userId:userId,
+        desc:desc,
+      }
+    })
+    revalidatePath('/profile')
+    console.log(post)
+  }
   return (
     <>
       <div className="p-2 bg-white rounded-lg shadow-md ">
@@ -19,7 +34,7 @@ const AddPost = () => {
               className="rounded-full cursor-pointer w-12 h-11"
             />
             <form
-              action=""
+              action={addPost}
               className="flex flex-row w-full gap-4 px-4 items-center"
             >
               <textarea

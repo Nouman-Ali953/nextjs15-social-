@@ -2,8 +2,23 @@ import Image from "next/image";
 import React from "react";
 import Interaction from "./Interaction";
 import Comments from "./Comments";
+import prisma from "@/lib/client";
 
-const Post = () => {
+
+
+interface PostProps {
+  userId: string;
+  desc: string;
+  img: string;
+  basePath: string;
+}
+
+const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
+  const user = await prisma.user.findFirst({
+    where:{
+      username:basePath
+    }
+  })
   return (
     <>
       <div className="p-4 bg-white shadow-md flex flex-col gap-8 rounded-md mb-4">
@@ -11,13 +26,13 @@ const Post = () => {
           <div className="flex flex-row justify-between px-3 items-center">
             <div className="flex flex-row gap-4 items-center justify-center">
               <Image
-                src="https://images.pexels.com/photos/27107645/pexels-photo-27107645/free-photo-of-shinjuku-temple-charms.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                src={user?.avatar || '/noAvatar.png'}
                 alt="user"
-                width={16}
-                height={16}
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-full"
               />{" "}
-              <span className="font-bold">Nauman Mukhtar</span>
+              <span className="font-bold">{user?.username}</span>
             </div>
             <div>
               <Image
@@ -32,19 +47,13 @@ const Post = () => {
           <div className="flex flex-col gap-4 relative">
             <div className="w-full h-64 relative">
               <Image
-                src="https://images.pexels.com/photos/15649537/pexels-photo-15649537/free-photo-of-close-up-of-sea-surface.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                src={img}
                 layout="fill"
                 className="object-cover rounded-md"
                 alt="postimage"
               />
             </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-              lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
-              malesuada. This setup allows you to customize and apply different
-              fonts to various text elements within your Next.js and Tailwind
-              CSS project.
-            </p>
+            <p>{desc}</p>
           </div>
           <Interaction />
           <Comments />

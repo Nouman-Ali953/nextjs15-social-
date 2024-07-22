@@ -7,9 +7,9 @@ const Navbar = () => {
   return (
     <div className="flex justify-between items-center h-24">
       {/* Left */}
-      <div className="md:hidden lg:block w-[20%]">
-        <Link href="/" className="text-blue-600 font-bold text-xl" style={{fontFamily:"sans-serif"}}>
-          NEXT.js15Social
+      <div className="md:hidden lg:block w-[20%] -ml-6">
+        <Link href="/">
+          <Image src='/logo.png' alt="logo" width={480} height={280} className="w-[38rem] h-32"/>
         </Link>
       </div>
       {/* center */}
