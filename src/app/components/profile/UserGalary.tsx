@@ -1,7 +1,25 @@
-import React from "react"
-import Image from "next/image"
+import React from "react";
+import Image from "next/image";
+import prisma from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
 
-const UserGalary = () => {
+const UserGalary = async () => {
+  const { userId: currentUserId } = auth();
+  if (!currentUserId) {
+    return null;
+  }
+  const userImages = await prisma.post.findMany({
+    where: {
+      userId: currentUserId,
+      img: {
+        not: null,
+      },
+    },
+    take: 8,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-2">
       <div className="flex flex-row justify-between">
@@ -11,54 +29,20 @@ const UserGalary = () => {
         </button>
       </div>
       <div className="flex flex-row flex-wrap gap-[1.4rem]">
-        <div className="relative w-20 h-24">
-          <Image
-            src="https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="img"
-            layout="fill"
-            className="w-20 h-20 object-cover"
-          />
-        </div>
-        <div className="relative w-20 h-24">
-          <Image
-            src="https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="img"
-            layout="fill"
-            className="w-20 h-20 object-cover"
-          />
-        </div>
-        <div className="relative w-20 h-24">
-          <Image
-            src="https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="img"
-            layout="fill"
-            className="w-20 h-20 object-cover"
-          />
-        </div>
-        <div className="relative w-20 h-24">
-          <Image
-            src="https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="img"
-            layout="fill"
-            className="w-20 h-20 object-cover"
-          />
-        </div>
-        <div className="relative w-20 h-24">
-          <Image
-            src="https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="img"
-            layout="fill"
-            className="w-20 h-20 object-cover"
-          />
-        </div>
-        <div className="relative w-20 h-24">
-          <Image
-            src="https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="img"
-            layout="fill"
-            className="w-20 h-20 object-cover"
-          />
-        </div>
+        {userImages.length ? (
+          userImages.map((postImage,index) => (
+            <div className="relative w-20 h-24" key={index}>
+              <Image
+                src={postImage.img!}
+                alt="img"
+                layout="fill"
+                className="w-20 h-20 object-cover"
+              />
+            </div>
+          ))
+        ) : (
+          <p>no images found</p>
+        )}
       </div>
     </div>
   );
