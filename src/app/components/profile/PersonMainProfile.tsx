@@ -5,9 +5,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 
-
-
-const PersonMainProfile = async ({basePath}:{basePath:string}) => {
+const PersonMainProfile = async ({ basePath }: { basePath: string }) => {
   const { userId } = auth();
   if (!userId) {
     return null;
@@ -20,11 +18,10 @@ const PersonMainProfile = async ({basePath}:{basePath:string}) => {
       _count: {
         select: {
           followers: true,
-          followings:true,
-          posts:true
+          followings: true,
+          posts: true,
         },
       },
-      
     },
   });
   if (!user) {
@@ -55,11 +52,11 @@ const PersonMainProfile = async ({basePath}:{basePath:string}) => {
           <span
             className={`w-[18rem] h-24 absolute left-0 right-0 mx-auto  ${
               basePath ? "mt-12" : "mt-6 w-full"
-            } font-bold text-lg text-center flex flex-row justify-center` }
+            } font-bold text-lg text-center flex flex-row justify-center`}
           >
             {user.name && user.surname
-            ? user.name + " " + user.surname
-            : user.username}
+              ? user.name + " " + user.surname
+              : user.username}
           </span>
         </div>
       </div>
@@ -85,7 +82,9 @@ const PersonMainProfile = async ({basePath}:{basePath:string}) => {
       </div>
 
       <div className={`${basePath ? "hidden" : "flex"} w-full`}>
-        <p className="w-full text-center mt-3 text-[.75rem]">{user._count.followers} followers</p>
+        <p className="w-full text-center mt-3 text-[.75rem]">
+          {user._count.followers} followers
+        </p>
       </div>
       <div
         className={`${basePath ? "hidden" : "flex"} w-full relative bottom-8`}

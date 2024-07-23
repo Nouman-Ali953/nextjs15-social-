@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import UserDetailInteraction from "./UserDetailInteraction";
 
 interface UserDetailsProps {
   path: string;
@@ -31,7 +32,10 @@ const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
     day: "numeric",
   });
 
-  console.log("this is ", user.username + " " + path);
+  const isFollowing = false;
+  const isFollowSent = false;
+  const isBlocked = false;
+
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-2">
       <div className="flex flex-row justify-between">
@@ -91,16 +95,9 @@ const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
           </span>
         </div>
       </div>
-      {user.username && user.username !== path ? (
-        <div className="flex flex-col gap-2 mt-2">
-          <button className="text-white bg-blue-500 rounded-md text-sm px-2 py-1 tracking-wide">
-            Following
-          </button>
-          <button className="text-red-600 self-end text-[.75rem] font-semibold">
-            Block User
-          </button>
-        </div>
-      ) : null}
+      {/* {user.username && user.username !== path ? ( */}
+        <UserDetailInteraction userId={user.id} isFollowing={isFollowing} isFollowSent={isFollowSent} isBlocked={isBlocked}/>
+      {/* ) : null} */}
     </div>
   );
 };
