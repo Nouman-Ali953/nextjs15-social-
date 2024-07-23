@@ -53,9 +53,9 @@ const PersonMainProfile = async ({basePath}:{basePath:string}) => {
             } object-cover absolute left-0 right-0 mx-auto rounded-full  ring-4`}
           />
           <span
-            className={`w-32 h-24 absolute left-0 right-0 mx-auto  ${
-              basePath ? "mt-12" : "mt-6"
-            } font-bold text-lg text-center` }
+            className={`w-[18rem] h-24 absolute left-0 right-0 mx-auto  ${
+              basePath ? "mt-12" : "mt-6 w-full"
+            } font-bold text-lg text-center flex flex-row justify-center` }
           >
             {user.name && user.surname
             ? user.name + " " + user.surname

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import React from "react";
 
-const AddPost = () => {
+const AddPost = async () => {
   const { userId } = auth();
   if (!userId) {
     return null;
@@ -21,16 +21,21 @@ const AddPost = () => {
     revalidatePath('/profile')
     console.log(post)
   }
+  const user = await prisma.user.findFirst({
+    where:{
+      id:userId
+    }
+  })
   return (
     <>
       <div className="p-2 bg-white rounded-lg shadow-md ">
         <div className="flex flex-col gap-2 justify-center">
           <div className="flex flex-row w-full gap-1 px-1">
             <Image
-              src="https://images.pexels.com/photos/25412898/pexels-photo-25412898/free-photo-of-a-tent-is-set-up-near-a-lake-with-trees.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+              src={user?.avatar || '/noAvatar.png'}
               alt="imag"
-              width={30}
-              height={30}
+              width={50}
+              height={50}
               className="rounded-full cursor-pointer w-12 h-11"
             />
             <form

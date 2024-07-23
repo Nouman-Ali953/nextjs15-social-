@@ -8,28 +8,28 @@ import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
 
 const page = async () => {
-  const {userId} = auth()
+  const { userId } = auth();
   if (!userId) {
     return null;
   }
   const userPersonalPosts = await prisma.post.findMany({
-    where:{
-      userId:userId
-    }
-  })
+    where: {
+      userId: userId,
+    },
+  });
   const user = await prisma.user.findFirst({
-    where:{
-      id:userId
-    }
-  })
+    where: {
+      id: userId,
+    },
+  });
   if (!user) {
     return null;
   }
   const basePath = user.username;
   // / Filter out posts with null images or provide a default image
-  const formattedPosts = userPersonalPosts.map(post => ({
+  const formattedPosts = userPersonalPosts.map((post) => ({
     ...post,
-    img: post.img ?? ''  // Default to an empty string if img is null
+    img: post.img ?? "", // Default to an empty string if img is null
   }));
 
   return (
@@ -41,11 +41,11 @@ const page = async () => {
         <div className="flex flex-col gap-6 w-full">
           <PersonMainProfile basePath={basePath} />
           <AddPost />
-          <Feed posts={formattedPosts} basePath={basePath}/>
+          <Feed posts={formattedPosts} basePath={basePath} />
         </div>
       </div>
       <div className="hidden md:hidden xl:block w-[30%]">
-        <RightMenu />
+        <RightMenu basePath={basePath} />
       </div>
     </div>
   );

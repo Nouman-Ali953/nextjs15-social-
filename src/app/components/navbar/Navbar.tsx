@@ -7,9 +7,10 @@ const Navbar = () => {
   return (
     <div className="flex justify-between items-center h-24">
       {/* Left */}
-      <div className="md:hidden lg:block w-[20%] -ml-6">
+      <div className="block w-[38%] pl-6 md:hidden lg:block lg:w-[21%] -ml-6 mt-3">
+
         <Link href="/">
-          <Image src='/logo.png' alt="logo" width={480} height={280} className="w-[38rem] h-32"/>
+          <Image src='/logo.png' alt="logo" width={240} height={240} className="w-[12rem] h-[3rem]"/>
         </Link>
       </div>
       {/* center */}

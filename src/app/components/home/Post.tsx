@@ -4,8 +4,6 @@ import Interaction from "./Interaction";
 import Comments from "./Comments";
 import prisma from "@/lib/client";
 
-
-
 interface PostProps {
   userId: string;
   desc: string;
@@ -15,10 +13,10 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
   const user = await prisma.user.findFirst({
-    where:{
-      username:basePath
-    }
-  })
+    where: {
+      username: basePath,
+    },
+  });
   return (
     <>
       <div className="p-4 bg-white shadow-md flex flex-col gap-8 rounded-md mb-4">
@@ -26,7 +24,7 @@ const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
           <div className="flex flex-row justify-between px-3 items-center">
             <div className="flex flex-row gap-4 items-center justify-center">
               <Image
-                src={user?.avatar || '/noAvatar.png'}
+                src={user?.avatar || "/noAvatar.png"}
                 alt="user"
                 width={40}
                 height={40}
@@ -45,15 +43,17 @@ const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
             </div>
           </div>
           <div className="flex flex-col gap-4 relative">
-            <div className="w-full h-64 relative">
-              <Image
-                src={img}
-                layout="fill"
-                className="object-cover rounded-md"
-                alt="postimage"
-              />
-            </div>
-            <p>{desc}</p>
+            {img ? (
+              <div className="w-full h-64 relative">
+                <Image
+                  src={img}
+                  layout="fill"
+                  className="object-cover rounded-md"
+                  alt="postimage"
+                />
+              </div>
+            ) : null}
+            <p className="min-h-[1rem] overflow-visible">{desc}</p>
           </div>
           <Interaction />
           <Comments />
