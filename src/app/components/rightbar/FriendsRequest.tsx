@@ -1,8 +1,26 @@
 import Image from "next/image";
 import React from "react";
-import Request from "./Request";
+import prisma from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
+import FriendRequestList from "./FriendRequestList";
 
-const FriendsRequest = () => {
+const FriendsRequest = async () => {
+  const { userId: currentUserId } = auth();
+  if (!currentUserId) {
+    return null;
+  }
+  const requests = await prisma.followRequest.findMany({
+    where: {
+      recieverId: currentUserId,
+    },
+    include: {
+      sender: true,
+    },
+  });
+  console.log('reqqq',requests)
+  if (requests.length === 0) {
+    return null;
+  }
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-4">
       <div className="flex flex-row justify-between">
@@ -14,10 +32,7 @@ const FriendsRequest = () => {
         </button>
       </div>
       <div className="flex flex-col gap-3">
-
-      <Request/>
-      <Request/>
-      <Request/>
+        <FriendRequestList requests={requests} />
       </div>
     </div>
   );

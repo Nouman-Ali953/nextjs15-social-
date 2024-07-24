@@ -72,18 +72,18 @@ const PersonMainProfile = async ({ basePath }: { basePath: string }) => {
           <p className="text-[.7rem] text-gray-500">Posts</p>
         </div>
         <div className="flex flex-col justify-start items-center text-sm font-semibold">
-          <span className="text-sm">{user._count.followers}</span>
+          <span className="text-sm">{user._count.followings}</span>
           <p className="text-[.7rem] text-gray-500">Followers</p>
         </div>
         <div className="flex flex-col justify-start items-center text-sm font-semibold">
-          <span className="text-sm">{user._count.followings}</span>
+          <span className="text-sm">{user._count.followers}</span>
           <p className="text-[.7rem] text-gray-500">Followings</p>
         </div>
       </div>
 
       <div className={`${basePath ? "hidden" : "flex"} w-full`}>
         <p className="w-full text-center mt-3 text-[.75rem]">
-          {user._count.followers} followers
+          {user._count.followings} followers
         </p>
       </div>
       <div

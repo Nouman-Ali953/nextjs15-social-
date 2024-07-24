@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import UserDetailInteraction from "./UserDetailInteraction";
+import UpdateInteraction from "./UpdateInteraction";
 
 interface UserDetailsProps {
   path: string;
@@ -38,14 +39,7 @@ const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
 
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-2">
-      <div className="flex flex-row justify-between">
-        <p className="text-[0.79rem] font-semibold text-gray-500">
-          User Information
-        </p>
-        <button className="text-[0.7rem] text-blue-600 font-semibold">
-          see all
-        </button>
-      </div>
+      <UpdateInteraction userId={userId}/>
       <div className="flex gap-1 items-center ">
         <p className="font-semibold">
           {user.name && user.surname
@@ -95,9 +89,14 @@ const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
           </span>
         </div>
       </div>
-      {/* {user.username && user.username !== path ? ( */}
-        <UserDetailInteraction userId={user.id} isFollowing={isFollowing} isFollowSent={isFollowSent} isBlocked={isBlocked}/>
-      {/* ) : null} */}
+      {user.username && user.username !== path ? (
+        <UserDetailInteraction
+          userId={user.id}
+          isFollowing={isFollowing}
+          isFollowSent={isFollowSent}
+          isBlocked={isBlocked}
+        />
+      ) : null}
     </div>
   );
 };
