@@ -17,7 +17,6 @@ const FriendsRequest = async () => {
       sender: true,
     },
   });
-  console.log('reqqq',requests)
   if (requests.length === 0) {
     return null;
   }

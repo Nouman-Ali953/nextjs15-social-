@@ -1,45 +1,42 @@
-import prisma from "@/lib/client";
-import { auth } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import PostSendButton from "./PostSendButton";
+import { CldUploadWidget } from "next-cloudinary";
+import { useUser } from "@clerk/nextjs";
+import { addUserPost } from "@/lib/actions";
 
-const AddPost = async () => {
-  const { userId } = auth();
-  if (!userId) {
+const AddPost = () => {
+  const { user, isLoaded } = useUser();
+  const [postimage, setPostimage] = useState<any>("");
+  if (!isLoaded) {
+    return (
+      <div className="grid place-items-center ">
+
+      <div className="h-[20px] w-[20px] animate-spin rounded-full border-2 border-white-300 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+      </div>
+    );
+  }
+  if (!user) {
     return null;
   }
-  const addPost = async (formData:FormData) => {
-    "use server"
-    const desc = formData.get('desc') as string;
-    const post = await prisma.post.create({
-      data:{
-        userId:userId,
-        desc:desc,
-      }
-    })
-    revalidatePath('/profile')
-    console.log(post)
-  }
-  const user = await prisma.user.findFirst({
-    where:{
-      id:userId
-    }
-  })
+
   return (
     <>
       <div className="p-2 bg-white rounded-lg shadow-md ">
         <div className="flex flex-col gap-2 justify-center">
           <div className="flex flex-row w-full gap-1 px-1">
             <Image
-              src={user?.avatar || '/noAvatar.png'}
+              src={user?.imageUrl || "/noAvatar.png"}
               alt="imag"
               width={50}
               height={50}
               className="rounded-full cursor-pointer w-12 h-11"
             />
             <form
-              action={addPost}
+              action={(formData) =>
+                addUserPost(postimage?.secure_url || "", formData)
+              }
               className="flex flex-row w-full gap-4 px-4 items-center"
             >
               <textarea
@@ -54,13 +51,29 @@ const AddPost = async () => {
                 height={16}
                 className="self-end cursor-pointer"
               />
-              <button className="bg-blue-500 px-2 py-1 text-white rounded-md">send</button>
+              <PostSendButton />
             </form>
           </div>
           <div className="flex flex-row flex-wrap items-center gap-6 ml-[4.8rem]">
             <div className="flex flex-row gap-1 justify-center items-center cursor-pointer">
-              <Image src="/Addimage.png" alt="imag" width={18} height={18} />
-              <span className="text-sm">Photo</span>
+              <CldUploadWidget
+                uploadPreset="social"
+                onSuccess={(results) => setPostimage(results.info)}
+              >
+                {({ open }) => {
+                  return (
+                    <div onClick={() => open()} className="flex gap-1">
+                      <Image
+                        src="/Addimage.png"
+                        alt="imag"
+                        width={18}
+                        height={18}
+                      />
+                      <span className="text-sm">Photo</span>
+                    </div>
+                  );
+                }}
+              </CldUploadWidget>
             </div>
             <div className="flex flex-row gap-1 justify-center items-center cursor-pointer">
               <Image src="/Addvideo.png" alt="imag" width={18} height={18} />

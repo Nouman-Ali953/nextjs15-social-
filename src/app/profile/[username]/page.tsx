@@ -12,10 +12,14 @@ const page = async () => {
   if (!userId) {
     return null;
   }
+  
   const userPersonalPosts = await prisma.post.findMany({
     where: {
       userId: userId,
     },
+    orderBy:{
+      createdAt: "desc"
+    }
   });
   const user = await prisma.user.findFirst({
     where: {
