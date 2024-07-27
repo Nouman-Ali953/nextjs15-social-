@@ -14,7 +14,7 @@ interface PostProps {
 const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
   const user = await prisma.user.findFirst({
     where: {
-      username: basePath,
+      id: userId,
     },
   });
   return (

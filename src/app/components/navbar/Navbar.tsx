@@ -15,18 +15,18 @@ const Navbar = () => {
       </div>
       {/* center */}
       <div className="hidden md:flex w-[50%]">
-        <div className="flex gap-9 text-gray-600 px-4 items-center">
-          <Link href="/" className="flex gap-2 items-center justify-center">
+        <div className="flex gap-9 text-gray-600 px-6 items-center ">
+          <Link href="/" className="flex gap-3 items-center justify-center">
             <Image src="/home.png" alt="home" width={16} height={16} className="w-4 h-4" />
-            <span>Homepage</span>
+            <span className="text-sm">Homepage</span>
           </Link>
           <Link href="/" className="flex gap-2 items-center">
             <Image src="/friends.png" alt="home" width={16} height={16} className="w-4 h-4" />
-            <span>Friends</span>
+            <span className="text-sm">Friends</span>
           </Link>
           <Link href="/" className="flex gap-2 items-center">
             <Image src="/stories.png" alt="home" width={16} height={16} className="w-4 h-4" />
-            <span>Stories</span>
+            <span className="text-sm">Stories</span>
           </Link>
           <div className="md:hidden lg:flex w-[17rem] h-7 ml-5 flex justify-center items-center relative ">
             <Image src='/search.png' alt="seach" width={14} height={14} className="absolute right-4 cursor-pointer"/>
