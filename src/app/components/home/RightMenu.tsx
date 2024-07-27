@@ -4,6 +4,7 @@ import Birthday from "../rightbar/Birthday";
 import Ad from "../rightbar/Ad";
 import UserDetails from "../profile/UserDetails";
 import UserGalary from "../profile/UserGalary";
+import FollowSuggestion from "../rightbar/FollowSuggestion";
 
 interface RightMenuProps {
   basePath: string;
@@ -20,6 +21,7 @@ const RightMenu: React.FC<RightMenuProps> = ({basePath}) => {
         </>
       ) : null}
       <FriendsRequest />
+      <FollowSuggestion />
       <Birthday />
       <Ad />
     </div>

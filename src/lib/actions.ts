@@ -238,3 +238,23 @@ export const addUserPost = async (postImage: string, formData: FormData) => {
     throw new Error("something went wrong adding the post");
   }
 };
+
+
+export const sendFollowRequest = async (userId:string) => {
+  console.log(userId)
+  const {userId:currentUserId} = auth();
+  if (!currentUserId) {
+    return null
+  }
+  try {
+    await prisma.followRequest.create({
+      data:{
+        senderId:currentUserId,
+        recieverId:userId
+      }
+    })
+    revalidatePath('/')
+  } catch (error) {
+    console.log(error)
+  }
+}
