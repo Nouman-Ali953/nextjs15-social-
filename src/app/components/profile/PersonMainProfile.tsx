@@ -5,7 +5,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 
-const PersonMainProfile = async ({ basePath }: { basePath: string }) => {
+const PersonMainProfile = async ({ basePath }: { basePath: string |null }) => {
   const { userId } = auth();
   if (!userId) {
     return null;

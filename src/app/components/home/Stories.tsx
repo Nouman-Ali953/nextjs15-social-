@@ -1,41 +1,54 @@
-import Image from 'next/image'
-import React from 'react'
+"use client";
+
+import { useUser } from "@clerk/nextjs";
+import { CldUploadWidget } from "next-cloudinary";
+import Image from "next/image";
+import React, { useState } from "react";
+import { MdLibraryAdd } from "react-icons/md";
 
 const Stories = () => {
+  const { user } = useUser();
+  const [storyImage, setStoryImage] = useState<any>();
   return (
-    <div className=' rounded-lg bg-white shadow-md overflow-scroll'>
-      <div className='flex gap-2 w-max p-1'>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
+    <>
+      <div className="flex flex-col items-center py-1 gap-1 cursor-pointer px-2">
+        {storyImage ? (
+          <Image
+            src={storyImage?.secure_url || ""}
+            alt="ok"
+            width={56}
+            height={56}
+            className="object-cover w-[4.4rem] h-[4.4rem] rounded-full"
+          />
+        ) : (
+          <CldUploadWidget
+            uploadPreset="social"
+            onSuccess={(results) => setStoryImage(results.info)}
+          >
+            {({ open }) => {
+              return (
+                <div
+                  onClick={() => open()}
+                  className="flex gap-1 w-[4.4rem] h-[4.4rem]  rounded-full ring-1 justify-center items-center"
+                >
+                  <MdLibraryAdd style={{ fontSize: "1.5rem" }} />
+                </div>
+              );
+            }}
+          </CldUploadWidget>
+        )}
+        <form >
+          <button
+            className={` ${
+              storyImage ? "block" : "hidden"
+            } text-sm bg-blue-500 text-white px-3 rounded-md py-[0.14rem] `}
+          >
+            send
+          </button>
+        </form>
       </div>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
-      </div>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
-      </div>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
-      </div>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
-      </div>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
-      </div>
-      <div className='flex flex-col items-center py-1 gap-1 cursor-pointer px-2'>
-          <Image src='https://images.pexels.com/photos/6464537/pexels-photo-6464537.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load' alt='story image' width={80} height={80} className='w-[4.4rem] h-[4.4rem]  rounded-full ring-2'/>
-          <span className='text-sm'>Ricky</span>
-      </div>
-      </div>
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default Stories
+export default Stories;

@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "./client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { Post, User } from "@prisma/client";
 
 export const switchBlock = async (userId: string) => {
   const { userId: currentUserId } = auth();
@@ -292,3 +293,30 @@ export const addUserLike = async (postId:number) => {
     throw new Error('something went wrong in adding the like')
   }
 }
+
+
+
+
+export const addComment = async (postId: number, desc: string) => {
+  const { userId } = auth();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    const createdComment = await prisma.comments.create({
+      data: {
+        desc,
+        userId,
+        postId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return createdComment;
+  } catch (err) {
+    console.log(err);
+    throw new Error("Something went wrong!");
+  }
+};

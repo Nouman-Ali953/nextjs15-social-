@@ -27,7 +27,7 @@ const Interaction = ({
       }))
   };
   return (
-    <div className="flex flex-row items-center justify-between">
+    <div className="flex flex-row items-center justify-between mt-2">
       <div className="flex flex-row gap-4">
         <div className=" cursor-pointer flex flex-row gap-2 items-center bg-slate-100 px-2 rounded-xl justify-center">
           <form action={() => addLike()}>

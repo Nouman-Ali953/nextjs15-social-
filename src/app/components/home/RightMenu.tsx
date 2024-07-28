@@ -7,12 +7,12 @@ import UserGalary from "../profile/UserGalary";
 import FollowSuggestion from "../rightbar/FollowSuggestion";
 
 interface RightMenuProps {
-  basePath: string;
+  basePath: string | null;
 }
 const RightMenu: React.FC<RightMenuProps> = ({basePath}) => {
   return (
     <div
-      className={`flex flex-col gap-6 ${basePath ? "sticky top-[16px]" : ""}`}
+      className={`flex flex-col gap-6 sticky top-[16px]`}
     >
       {basePath ? (
         <>
@@ -21,7 +21,7 @@ const RightMenu: React.FC<RightMenuProps> = ({basePath}) => {
         </>
       ) : null}
       <FriendsRequest />
-      <FollowSuggestion />
+      <FollowSuggestion/>
       <Birthday />
       <Ad />
     </div>

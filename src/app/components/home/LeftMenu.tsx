@@ -4,7 +4,7 @@ import Menu from "../leftbar/Menu";
 import PersonMainProfile from "../profile/PersonMainProfile";
 
 interface LeftMenuProps {
-  basePath: string;
+  basePath: string | null;
 }
 const LeftMenu: React.FC<LeftMenuProps> = ({ basePath }) => {
   return (

@@ -108,7 +108,7 @@ model Story {
   id        Int      @id @default(autoincrement())
   img       String
   createdAt DateTime @default(now())
-  expiresAr DateTime
+  expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @unique
 }

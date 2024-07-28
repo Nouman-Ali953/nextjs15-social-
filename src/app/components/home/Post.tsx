@@ -39,6 +39,7 @@ const Post = async ({ post }: { post: FeedPostType }) => {
             </div>
           </div>
           <div className="flex flex-col gap-4 relative">
+            <p className="min-h-[1rem] overflow-visible">{post.desc}</p>
             {post.img ? (
               <div className="w-full h-64 relative">
                 <Image
@@ -49,14 +50,13 @@ const Post = async ({ post }: { post: FeedPostType }) => {
                 />
               </div>
             ) : null}
-            <p className="min-h-[1rem] overflow-visible">{post.desc}</p>
           </div>
           <Interaction
             postId={post.id}
             likes={post?.likes?.map((like) => like.userId)}
             commentNumber={post._count?.comments}
           />
-          <Comments />
+          <Comments postId={post.id}  />
         </div>
       </div>
     </>
