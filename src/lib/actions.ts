@@ -258,3 +258,37 @@ export const sendFollowRequest = async (userId:string) => {
     console.log(error)
   }
 }
+
+
+export const addUserLike = async (postId:number) => {
+  try {
+    const {userId} = auth();
+    if (!userId) {
+      throw new Error('user is not authenticated')
+    }
+    const existingLike = await prisma.like.findFirst({
+      where:{
+        postId,
+        userId
+      }
+    })
+
+    if (existingLike) {
+      await prisma.like.delete({
+        where:{
+          id:existingLike.id
+        }
+      })
+    }else{
+      await prisma.like.create({
+        data:{
+          postId,
+          userId
+        }
+      })
+    }
+    
+  } catch (error) {
+    throw new Error('something went wrong in adding the like')
+  }
+}

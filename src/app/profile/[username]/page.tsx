@@ -15,12 +15,26 @@ const page = async () => {
   
   const userPersonalPosts = await prisma.post.findMany({
     where: {
-      userId: userId,
+      userId
     },
-    orderBy:{
-      createdAt: "desc"
-    }
+    include: {
+      user: true,
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
+
   const user = await prisma.user.findFirst({
     where: {
       id: userId,
@@ -31,7 +45,7 @@ const page = async () => {
   }
   const basePath = user.username;
   // / Filter out posts with null images or provide a default image
-  const formattedPosts = userPersonalPosts.map((post) => ({
+  const formattedPosts = userPersonalPosts?.map((post) => ({
     ...post,
     img: post.img ?? "", // Default to an empty string if img is null
   }));

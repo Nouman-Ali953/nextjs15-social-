@@ -1,22 +1,19 @@
 import React from "react";
 import Post from "./Post";
+import { Post as PostType, User } from "@prisma/client";
 
-interface PostType {
-  userId: string;
-  desc: string;
-  img: string;
-}
-interface FeedProps {
-  posts: PostType[];
-  basePath: string;
-}
+type FeedPostType = PostType & { user: User } & {
+  likes: [{ userId: string }];
+} & {
+  _count: { comments: number };
+};
 
 
-const Feed : React.FC <FeedProps> = ({posts,basePath})=> {
+const Feed = ({ posts }: { posts: FeedPostType[] }) => {
   return (
     <>
-       {posts?.map((post, index) => (
-        <Post key={index} userId={post.userId} desc={post.desc} img={post.img} basePath={basePath}/>
+      {posts?.map((post) => (
+        <Post key={post.id} post={post} />
       ))}
     </>
   );

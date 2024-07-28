@@ -2,21 +2,17 @@ import Image from "next/image";
 import React from "react";
 import Interaction from "./Interaction";
 import Comments from "./Comments";
-import prisma from "@/lib/client";
+import { Post as PostType, User } from "@prisma/client";
 
-interface PostProps {
-  userId: string;
-  desc: string;
-  img: string;
-  basePath: string;
-}
+type FeedPostType = PostType & { user: User } & {
+  likes: [{ userId: string }];
+} & {
+  _count: { comments: number };
+};
 
-const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
-  const user = await prisma.user.findFirst({
-    where: {
-      id: userId,
-    },
-  });
+const Post = async ({ post }: { post: FeedPostType }) => {
+  
+
   return (
     <>
       <div className="p-4 bg-white shadow-md flex flex-col gap-8 rounded-md mb-4">
@@ -24,13 +20,13 @@ const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
           <div className="flex flex-row justify-between px-3 items-center">
             <div className="flex flex-row gap-4 items-center justify-center">
               <Image
-                src={user?.avatar || "/noAvatar.png"}
+                src={post.user?.avatar || "/noAvatar.png"}
                 alt="user"
                 width={40}
                 height={40}
                 className="w-10 h-10 rounded-full"
               />{" "}
-              <span className="font-bold">{user?.username}</span>
+              <span className="font-bold">{post.user?.username}</span>
             </div>
             <div>
               <Image
@@ -43,19 +39,23 @@ const Post: React.FC<PostProps> = async ({ userId, desc, img, basePath }) => {
             </div>
           </div>
           <div className="flex flex-col gap-4 relative">
-            {img ? (
+            {post.img ? (
               <div className="w-full h-64 relative">
                 <Image
-                  src={img}
+                  src={post.img}
                   layout="fill"
                   className="object-cover rounded-md"
                   alt="postimage"
                 />
               </div>
             ) : null}
-            <p className="min-h-[1rem] overflow-visible">{desc}</p>
+            <p className="min-h-[1rem] overflow-visible">{post.desc}</p>
           </div>
-          <Interaction />
+          <Interaction
+            postId={post.id}
+            likes={post?.likes?.map((like) => like.userId)}
+            commentNumber={post._count?.comments}
+          />
           <Comments />
         </div>
       </div>

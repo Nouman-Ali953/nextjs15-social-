@@ -13,29 +13,28 @@ const UpdateInteraction = ({ userId }: { userId: string }) => {
   const [cover, setCover] = useState<any>("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  
   const [state, formAction] = useActionState(updateProfile, {
     success: false,
     error: false,
   });
-  
+
   useEffect(() => {
     if (state.success) {
       setShowSuccessMessage(true);
       const timer = setTimeout(() => {
-        setOpen(false)
+        setOpen(false);
         setShowSuccessMessage(false);
-        state.success = false
+        state.success = false;
       }, 1000);
       return () => clearTimeout(timer);
     }
   }, [state.success]);
-  
+
   const handleClose = () => {
-    setOpen((prev)=> !prev)
+    setOpen((prev) => !prev);
     state.success = false;
-    state.error = false
-  }
+    state.error = false;
+  };
 
   return (
     <>
@@ -80,8 +79,8 @@ const UpdateInteraction = ({ userId }: { userId: string }) => {
                 <div className="w-[100%]">
                   <div className="relative grid place-items-center bg-opacity-25">
                     <Image
-                      src="/noCover.png"
-                      alt="img"
+                      src={cover ? cover?.secure_url : "/noCover.png"}
+                      alt="cover"
                       width={100}
                       height={100}
                       className="w-full h-[5rem] object-cover opacity-65 rounded-sm"
@@ -167,7 +166,9 @@ const UpdateInteraction = ({ userId }: { userId: string }) => {
                   </span>
                 )}
                 {state.error && (
-                  <span className="text-red-500 self-start w-full -mt-2">Something went wrong!</span>
+                  <span className="text-red-500 self-start w-full -mt-2">
+                    Something went wrong!
+                  </span>
                 )}
               </form>
             </div>

@@ -44,17 +44,11 @@ const AddPost = () => {
                 name="desc"
                 className="flex-1 bg-slate-100 px-2 pt-1 rounded-md h-11 text-sm outline-none"
               ></textarea>
-              <Image
-                src="/emoji.png"
-                alt="imag"
-                width={16}
-                height={16}
-                className="self-end cursor-pointer"
-              />
+             
               <PostSendButton />
             </form>
           </div>
-          <div className="flex flex-row flex-wrap items-center gap-6 ml-[4.8rem]">
+          <div className="flex flex-row flex-wrap items-center gap-6 ml-[4.4rem]">
             <div className="flex flex-row gap-1 justify-center items-center cursor-pointer">
               <CldUploadWidget
                 uploadPreset="social"
