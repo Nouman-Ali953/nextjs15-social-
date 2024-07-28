@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import React from "react";
 import SuggestionButton from "./SuggestionButton";
-
+import AllUsersFollow from "./AllUsersFollow";
 const FollowSuggestion = async () => {
   const { userId: currentUserId } = auth();
   if (!currentUserId) {
@@ -32,19 +32,29 @@ const FollowSuggestion = async () => {
         ],
       },
     },
+    take:4
   });
+
+  // Shuffle function
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Shuffle and take a random subset
+const shuffledUsers = shuffleArray(SuggestPeoples);
+const randomUsers = shuffledUsers.slice(0, 4);
+
+
+
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-4">
-      <div className="flex flex-row justify-between">
-        <p className="text-[0.79rem] font-semibold text-gray-500">
-          Follow people to see their posts
-        </p>
-        <button className="text-[0.7rem] text-blue-600 font-semibold">
-          see all
-        </button>
-      </div>
+      <AllUsersFollow/>
       <div className="flex flex-col gap-3">
-        {SuggestPeoples.map((people) => (
+        {randomUsers.map((people) => (
           <>
             <div
               key={people.id}
