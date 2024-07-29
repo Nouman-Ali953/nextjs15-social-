@@ -229,7 +229,7 @@ export const addUserPost = async (postImage: string, formData: FormData) => {
       data: {
         desc: validatedDesc.data,
         userId,
-        img:postImage,
+        img: postImage,
       },
     });
 
@@ -240,62 +240,56 @@ export const addUserPost = async (postImage: string, formData: FormData) => {
   }
 };
 
-
-export const sendFollowRequest = async (userId:string) => {
-  console.log(userId)
-  const {userId:currentUserId} = auth();
+export const sendFollowRequest = async (userId: string) => {
+  console.log(userId);
+  const { userId: currentUserId } = auth();
   if (!currentUserId) {
-    return null
+    return null;
   }
   try {
     await prisma.followRequest.create({
-      data:{
-        senderId:currentUserId,
-        recieverId:userId
-      }
-    })
-    revalidatePath('/')
+      data: {
+        senderId: currentUserId,
+        recieverId: userId,
+      },
+    });
+    revalidatePath("/");
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-
-export const addUserLike = async (postId:number) => {
+export const addUserLike = async (postId: number) => {
   try {
-    const {userId} = auth();
+    const { userId } = auth();
     if (!userId) {
-      throw new Error('user is not authenticated')
+      throw new Error("user is not authenticated");
     }
     const existingLike = await prisma.like.findFirst({
-      where:{
+      where: {
         postId,
-        userId
-      }
-    })
+        userId,
+      },
+    });
 
     if (existingLike) {
       await prisma.like.delete({
-        where:{
-          id:existingLike.id
-        }
-      })
-    }else{
+        where: {
+          id: existingLike.id,
+        },
+      });
+    } else {
       await prisma.like.create({
-        data:{
+        data: {
           postId,
-          userId
-        }
-      })
+          userId,
+        },
+      });
     }
-    
   } catch (error) {
-    throw new Error('something went wrong in adding the like')
+    throw new Error("something went wrong in adding the like");
   }
-}
-
-
-
+};
 
 export const addComment = async (postId: number, desc: string) => {
   const { userId } = auth();
@@ -318,5 +312,32 @@ export const addComment = async (postId: number, desc: string) => {
   } catch (err) {
     console.log(err);
     throw new Error("Something went wrong!");
+  }
+};
+
+export const addUserStory = async (storyImage: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("user is not authenticated");
+  }
+
+  try {
+    const existingStoryDelete = await prisma.story.deleteMany({
+      where: {
+        userId,
+      },
+    });
+
+    const createStory = await prisma.story.create({
+      data: {
+        img: storyImage,
+        userId,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+    revalidatePath("/");
+  } catch (error) {
+    console.log(error);
+    throw new Error("something went wrong in adding the story");
   }
 };

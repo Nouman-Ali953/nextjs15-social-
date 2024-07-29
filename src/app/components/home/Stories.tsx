@@ -1,14 +1,17 @@
 "use client";
-
-import { useUser } from "@clerk/nextjs";
+import { addUserStory } from "@/lib/actions";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import React, { useState } from "react";
 import { MdLibraryAdd } from "react-icons/md";
 
 const Stories = () => {
-  const { user } = useUser();
   const [storyImage, setStoryImage] = useState<any>();
+
+  const add = async () => {
+    await addUserStory(storyImage.secure_url);
+    setStoryImage("");
+  };
   return (
     <>
       <div className="flex flex-col items-center py-1 gap-1 cursor-pointer px-2">
@@ -37,7 +40,7 @@ const Stories = () => {
             }}
           </CldUploadWidget>
         )}
-        <form >
+        <form action={add}>
           <button
             className={` ${
               storyImage ? "block" : "hidden"

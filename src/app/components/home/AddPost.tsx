@@ -5,16 +5,14 @@ import PostSendButton from "./PostSendButton";
 import { CldUploadWidget } from "next-cloudinary";
 import { useUser } from "@clerk/nextjs";
 import { addUserPost } from "@/lib/actions";
+import PostLoader from "../loadings/PostLoader";
 
 const AddPost = () => {
   const { user, isLoaded } = useUser();
   const [postimage, setPostimage] = useState<any>("");
   if (!isLoaded) {
     return (
-      <div className="grid place-items-center ">
-
-      <div className="h-[20px] w-[20px] animate-spin rounded-full border-2 border-white-300 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite]" />
-      </div>
+      <PostLoader/>
     );
   }
   if (!user) {

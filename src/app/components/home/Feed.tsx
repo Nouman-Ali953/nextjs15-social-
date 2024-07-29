@@ -8,12 +8,13 @@ type FeedPostType = PostType & { user: User } & {
   _count: { comments: number };
 };
 
-
-const Feed = ({ posts }: { posts: FeedPostType[] }) => {
+const Feed = async({ posts }: { posts: FeedPostType[] }) => {
+  const delay = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
+  await delay(2000)
   return (
     <>
       {posts?.map((post) => (
-        <Post key={post.id} post={post} />
+          <Post key={post.id} post={post} />
       ))}
     </>
   );

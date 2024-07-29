@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import LeftMenu from "./components/home/LeftMenu";
 import RightMenu from "./components/home/RightMenu";
 import AddPost from "./components/home/AddPost";
@@ -6,6 +6,7 @@ import Feed from "./components/home/Feed";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
 import GetStories from "./components/home/GetStories";
+
 
 const page = async ({ params }: { params: { username: string } }) => {
   const { userId } = auth();
@@ -24,6 +25,7 @@ const page = async ({ params }: { params: { username: string } }) => {
 
   const followingIds = following.map((f) => f.followingId);
   const ids = [userId, ...followingIds];
+
   const userPersonalPosts = await prisma.post.findMany({
     where: {
       userId: {
@@ -55,17 +57,17 @@ const page = async ({ params }: { params: { username: string } }) => {
   return (
     <div className="flex gap-4 pt-6">
       <div className="hidden lg:block xl:block w-[20%]">
-        <LeftMenu basePath={null}/>
+        <LeftMenu basePath={null} />
       </div>
       <div className="w-full lg:w-[70%] xl:w-[50%]">
         <div className="flex flex-col gap-6 w-full">
-          <GetStories/>
+          <GetStories />
           <AddPost />
-          <Feed posts={formattedPosts} basePath={null}/>
+          <Feed posts={formattedPosts} basePath={null} />
         </div>
       </div>
       <div className="hidden md:hidden xl:block w-[30%]  ">
-        <RightMenu basePath={null}/>
+        <RightMenu basePath={null} />
       </div>
     </div>
   );
