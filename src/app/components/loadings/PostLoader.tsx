@@ -4,6 +4,7 @@ import ContentLoader from "react-content-loader";
 
 const PostLoader = () => {
   return (
+    <div className="border border-gray-300 rounded-md py-2">
     <ContentLoader
       height={74}
       width={740}
@@ -11,6 +12,7 @@ const PostLoader = () => {
       backgroundColor="#d9d9d9"
       foregroundColor="#ecebeb"
     >
+
       <circle cx="27" cy="27" r="18" />
       <rect x="53" y="14" rx="3" ry="3" width="180" height="13" />
       <rect x="53" y="30" rx="3" ry="3" width="10" height="10" />
@@ -19,6 +21,7 @@ const PostLoader = () => {
       <rect x="0" y="53" rx="0" ry="0" width="320" height="100" />
       <rect x="219" y="146" rx="0" ry="0" width="10" height="100" />
     </ContentLoader>
+      </div>
   );
 };
 

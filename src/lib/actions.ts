@@ -315,29 +315,41 @@ export const addComment = async (postId: number, desc: string) => {
   }
 };
 
-export const addUserStory = async (storyImage: string) => {
+
+
+
+export const addUserStory = async (img: string) => {
   const { userId } = auth();
-  if (!userId) {
-    throw new Error("user is not authenticated");
-  }
+
+  if (!userId) throw new Error("User is not authenticated!");
 
   try {
-    const existingStoryDelete = await prisma.story.deleteMany({
+    const existingStory = await prisma.story.findFirst({
       where: {
         userId,
       },
     });
 
-    const createStory = await prisma.story.create({
+    if (existingStory) {
+      await prisma.story.delete({
+        where: {
+          id: existingStory.id,
+        },
+      });
+    }
+    const createdStory = await prisma.story.create({
       data: {
-        img: storyImage,
         userId,
+        img,
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       },
+      include: {
+        user: true,
+      },
     });
-    revalidatePath("/");
-  } catch (error) {
-    console.log(error);
-    throw new Error("something went wrong in adding the story");
+
+    return createdStory;
+  } catch (err) {
+    console.log(err);
   }
 };
