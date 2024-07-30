@@ -14,6 +14,14 @@ const page = async ({ params }: { params: { username: string } }) => {
     return null;
   }
 
+  const user = await prisma.user.findFirst({
+    where:{
+      id:userId
+    }
+  })
+  if (!user) {
+    return null
+  }
   const following = await prisma.follower.findMany({
     where: {
       followerId: userId,
@@ -54,6 +62,7 @@ const page = async ({ params }: { params: { username: string } }) => {
     img: post.img ?? "", // Default to an empty string if img is null
   }));
 
+  
   return (
     <div className="flex gap-4 pt-6">
       <div className="hidden lg:block xl:block w-[20%]">
@@ -63,11 +72,11 @@ const page = async ({ params }: { params: { username: string } }) => {
         <div className="flex flex-col gap-6 w-full">
           <GetStories />
           <AddPost />
-          <Feed posts={formattedPosts} basePath={null} />
+          <Feed posts={formattedPosts}  />
         </div>
       </div>
       <div className="hidden md:hidden xl:block w-[30%]  ">
-        <RightMenu basePath={null} />
+        <RightMenu basePath={null} user={user}/>
       </div>
     </div>
   );

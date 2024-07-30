@@ -20,7 +20,7 @@ const FriendRequestList = ({ requests }: { requests: RequestWithUser[] }) => {
   return (
     <>
       {requests.map((request, index) => (
-        <div className="flex flex-row justify-between items-center ">
+        <div className="flex flex-row justify-between items-center " key={index}>
           <div className="flex gap-2 items-center justify-center" key={index}>
             <Image
               src={request.sender.avatar || "/noAvatar.png"}

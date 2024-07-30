@@ -29,7 +29,7 @@ const UpdateInteraction = ({ users,covers }: { users: User,covers:string | null 
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [state.success]);
+  }, [state]);
 
   const handleClose = () => {
     setOpen((prev) => !prev);

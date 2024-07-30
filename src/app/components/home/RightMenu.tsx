@@ -11,7 +11,7 @@ import prisma from "@/lib/client";
 
 interface RightMenuProps {
   basePath: string | null;
-  user: User;
+  user: User ;
 }
 const RightMenu: React.FC<RightMenuProps> = async ({ basePath, user }) => {
   const { userId } = auth();

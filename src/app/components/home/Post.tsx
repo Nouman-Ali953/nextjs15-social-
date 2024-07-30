@@ -7,9 +7,9 @@ import Loader from "@/app/components/loadings/Loader";
 import PostUserInteraction from "./PostUserInteraction";
 import { auth } from "@clerk/nextjs/server";
 
-type FeedPostType = PostType & { user: User } & {
-  likes: [{ userId: string }];
-} & {
+type FeedPostType = PostType & {
+  user: User;
+  likes: { userId: string }[]; // Correctly defined as an array of objects
   _count: { comments: number };
 };
 

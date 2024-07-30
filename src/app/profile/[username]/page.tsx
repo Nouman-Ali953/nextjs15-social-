@@ -92,7 +92,7 @@ const page = async ({ params }: { params: { username: string } }) => {
         <div className="flex flex-col gap-6 w-full">
           <PersonMainProfile basePath={basePath} user={user} />
           <AddPost />
-          <Feed posts={formattedPosts} basePath={basePath}  />
+          <Feed posts={formattedPosts}  />
         </div>
       </div>
       <div className="hidden md:hidden xl:block w-[30%]">

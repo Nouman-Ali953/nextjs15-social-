@@ -11,11 +11,14 @@ const PersonMainProfile = async ({
   user,
   basePath,
 }: {
-  user: User;
+  user: User | null;
   basePath: string | null;
 }) => {
   const { userId } = auth();
   if (!userId) {
+    return null;
+  }
+  if (!user) {
     return null;
   }
   let users;
