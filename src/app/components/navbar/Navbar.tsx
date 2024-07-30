@@ -20,7 +20,7 @@ const Navbar = () => {
             <Image src="/home.png" alt="home" width={16} height={16} className="w-4 h-4" />
             <span className="text-sm">Homepage</span>
           </Link>
-          <Link href="/" className="flex gap-2 items-center">
+          <Link href="/suggestions" className="flex gap-2 items-center">
             <Image src="/friends.png" alt="home" width={16} height={16} className="w-4 h-4" />
             <span className="text-sm">Friends</span>
           </Link>

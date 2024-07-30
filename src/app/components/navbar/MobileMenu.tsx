@@ -1,11 +1,13 @@
 "use client";
-import { ClerkLoaded, ClerkLoading, SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, SignedOut, SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { IoPersonOutline } from "react-icons/io5";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const {user} = useUser()
   return (
     <div className="flex gap-8 justify-center items-center flex-row-reverse">
       <div
@@ -18,11 +20,11 @@ const MobileMenu = () => {
       </div>
       {isOpen && (
         <div className="absolute h-[calc(100vh-96px)] w-full left-0 top-24 bg-white flex flex-col gap-8 items-center justify-center font-medium text-xl z-10">
-          <Link href="#">Home</Link>
-          <Link href="#">Friends</Link>
+          <Link href="/">Home</Link>
+          <Link href="/suggestions">Friends</Link>
           <Link href="#">Groups</Link>
-          <Link href="#">Stories</Link>
-          <Link href="#">Login</Link>
+          <Link href="/">Stories</Link>
+          <Link href="/sign-in">Login</Link>
         </div>
       )}
 
@@ -34,14 +36,18 @@ const MobileMenu = () => {
         <SignedIn>
           <div className="flex flex-row gap-4 w-24 justify-center items-center">
             <div className="cursor-pointer">
-              <Image src="/people.png" alt="hanepng" width={22} height={22} />
-            </div>
-            <div className="cursor-pointer">
-              <Image src="/messages.png" alt="hanepng" width={18} height={18} />
-            </div>
-            <div className="cursor-pointer">
               <Image src="/notifications.png" alt="hanepng" width={18} height={18} />
             </div>
+            <Link href='/suggestions'>
+            <div className="cursor-pointer">
+              <Image src="/people.png" alt="hanepng" width={22} height={22} />
+            </div>
+            </Link>
+            <Link href={`/profile/${user?.username}`}>
+            <div className="cursor-pointer">
+              <IoPersonOutline style={{fontSize:'1.2rem'}}/>
+            </div>
+            </Link>
           </div>
             <UserButton />
           </SignedIn>
