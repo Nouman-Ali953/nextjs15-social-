@@ -4,6 +4,8 @@ import Interaction from "./Interaction";
 import Comments from "./Comments";
 import { Post as PostType, User } from "@prisma/client";
 import Loader from "@/app/components/loadings/Loader";
+import PostUserInteraction from "./PostUserInteraction";
+import { auth } from "@clerk/nextjs/server";
 
 type FeedPostType = PostType & { user: User } & {
   likes: [{ userId: string }];
@@ -12,31 +14,18 @@ type FeedPostType = PostType & { user: User } & {
 };
 
 const Post = async ({ post }: { post: FeedPostType }) => {
+  const {userId} = auth()
+  if (!userId) {
+    return null;
+  }
   return (
     <>
       <Suspense fallback={<Loader />}>
         <div className="p-4 bg-white shadow-md flex flex-col gap-8 rounded-md mb-4">
           <div className="flex flex-col gap-2">
             <div className="flex flex-row justify-between px-3 items-center">
-              <div className="flex flex-row gap-4 items-center justify-center">
-                <Image
-                  src={post.user?.avatar || "/noAvatar.png"}
-                  alt="user"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 rounded-full"
-                />{" "}
-                <span className="font-bold">{post.user?.username}</span>
-              </div>
-              <div>
-                <Image
-                  src="/more.png"
-                  alt="user"
-                  width={14}
-                  height={14}
-                  className="cursor-pointer"
-                />
-              </div>
+             <PostUserInteraction post={post} userId={userId}/>
+            
             </div>
             <div className="flex flex-col gap-4 relative">
               <p className="min-h-[1rem] overflow-visible">{post.desc}</p>

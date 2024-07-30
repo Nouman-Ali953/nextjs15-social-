@@ -5,14 +5,15 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FcAddImage } from "react-icons/fc";
 import { updateProfile } from "@/lib/actions";
 import { CldUploadWidget } from "next-cloudinary";
-import { useRouter } from "next/navigation";
 import UpdateButton from "./UpdateButton";
+import { useUser } from "@clerk/nextjs";
+import { User } from "@prisma/client";
 
-const UpdateInteraction = ({ userId }: { userId: string }) => {
+const UpdateInteraction = ({ users,covers }: { users: User,covers:string | null | undefined }) => {
   const [open, setOpen] = useState(false);
-  const [cover, setCover] = useState<any>("");
+  const {user } = useUser()
+  const [cover, setCover] = useState<any>(covers);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
   const [state, formAction] = useActionState(updateProfile, {
     success: false,
     error: false,
@@ -44,9 +45,9 @@ const UpdateInteraction = ({ userId }: { userId: string }) => {
         </p>
         <button
           className="text-[0.7rem] text-blue-600 font-semibold"
-          onClick={() => setOpen(true)}
+          onClick={user?.username === users?.username ?() => setOpen(true):undefined}
         >
-          {userId ? (
+          {user?.username === users?.username ? (
             <span className="bg-blue-500 text-white px-2 py-1 rounded-sm outline-none">
               update user
             </span>
@@ -72,14 +73,14 @@ const UpdateInteraction = ({ userId }: { userId: string }) => {
               </p>
               <form
                 action={(formData) =>
-                  formAction({ formData, cover: cover?.secure_url || "" })
+                  formAction({ formData, cover: cover?.secure_url || covers })
                 }
                 className="p-4 px-[10%] flex flex-row flex-wrap items-center gap-3 w-full justify-center"
               >
                 <div className="w-[100%]">
                   <div className="relative grid place-items-center bg-opacity-25">
                     <Image
-                      src={cover ? cover?.secure_url : "/noCover.png"}
+                      src={covers ? cover : cover?.secure_url }
                       alt="cover"
                       width={100}
                       height={100}
@@ -87,7 +88,7 @@ const UpdateInteraction = ({ userId }: { userId: string }) => {
                     />
                     <CldUploadWidget
                       uploadPreset="social"
-                      onSuccess={(results) => setCover(results.info)}
+                      onSuccess={(results) => setCover(results.info? results.info :covers)}
                     >
                       {({ open }) => {
                         return (

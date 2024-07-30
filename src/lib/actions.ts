@@ -4,13 +4,14 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "./client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { Post, User } from "@prisma/client";
 
 export const switchBlock = async (userId: string) => {
   const { userId: currentUserId } = auth();
+
   if (!currentUserId) {
-    throw new Error("user is not authenticated");
+    throw new Error("User is not Authenticated!!");
   }
+
   try {
     const existingBlock = await prisma.block.findFirst({
       where: {
@@ -18,6 +19,7 @@ export const switchBlock = async (userId: string) => {
         blockedId: userId,
       },
     });
+
     if (existingBlock) {
       await prisma.block.delete({
         where: {
@@ -32,17 +34,20 @@ export const switchBlock = async (userId: string) => {
         },
       });
     }
-  } catch (error) {
-    console.log(error);
-    throw new Error("something went wrong in blocking user");
+  } catch (err) {
+    console.log(err);
+    throw new Error("Something went wrong!");
   }
 };
 
+
 export const switchFollow = async (userId: string) => {
   const { userId: currentUserId } = auth();
+
   if (!currentUserId) {
-    throw new Error("user is not authenticated");
+    throw new Error("User is not authenticated!");
   }
+
   try {
     const existingFollow = await prisma.follower.findFirst({
       where: {
@@ -50,6 +55,7 @@ export const switchFollow = async (userId: string) => {
         followingId: userId,
       },
     });
+
     if (existingFollow) {
       await prisma.follower.delete({
         where: {
@@ -57,16 +63,17 @@ export const switchFollow = async (userId: string) => {
         },
       });
     } else {
-      const existingFollowSend = await prisma.followRequest.findFirst({
+      const existingFollowRequest = await prisma.followRequest.findFirst({
         where: {
           senderId: currentUserId,
           recieverId: userId,
         },
       });
-      if (existingFollowSend) {
+
+      if (existingFollowRequest) {
         await prisma.followRequest.delete({
           where: {
-            id: existingFollowSend.id,
+            id: existingFollowRequest.id,
           },
         });
       } else {
@@ -78,9 +85,9 @@ export const switchFollow = async (userId: string) => {
         });
       }
     }
-  } catch (error) {
-    console.log(error);
-    throw new Error("something went wrong in blocking user");
+  } catch (err) {
+    console.log(err);
+    throw new Error("Something went wrong!");
   }
 };
 
@@ -315,9 +322,6 @@ export const addComment = async (postId: number, desc: string) => {
   }
 };
 
-
-
-
 export const addUserStory = async (img: string) => {
   const { userId } = auth();
 
@@ -353,3 +357,19 @@ export const addUserStory = async (img: string) => {
     console.log(err);
   }
 };
+
+
+export const DeletePost = async (id:number) => {
+  try {
+      await prisma.post.delete({
+        where:{
+          id
+        }
+      })
+
+      revalidatePath('/profile')
+  } catch (error) {
+    console.log(error)
+    throw new Error('error')
+  }
+}

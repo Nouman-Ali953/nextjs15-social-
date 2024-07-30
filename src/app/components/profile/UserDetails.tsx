@@ -6,26 +6,33 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import UserDetailInteraction from "./UserDetailInteraction";
 import UpdateInteraction from "./UpdateInteraction";
+import { User } from "@prisma/client";
 
 interface UserDetailsProps {
   path: string;
+  user: User;
 }
 
-const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
+const UserDetails: React.FC<UserDetailsProps> = async ({ path, user }) => {
   const { userId } = auth();
   if (!userId) {
     return null;
   }
-  const user = await prisma.user.findFirst({
+  const currentUser = await prisma.user.findFirst({
     where: {
       id: userId,
     },
   });
-  if (!user) {
+  const users = await prisma.user.findFirst({
+    where: {
+      id: user.id,
+    },
+  });
+  if (!users) {
     return notFound();
   }
 
-  const createdAtDate = new Date(user.createdAt);
+  const createdAtDate = new Date(users.createdAt);
 
   const formattedDate = createdAtDate.toLocaleDateString("en-US", {
     year: "numeric",
@@ -33,54 +40,82 @@ const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
     day: "numeric",
   });
 
-  const isFollowing = false;
-  const isFollowSent = false;
-  const isBlocked = false;
+  let isUserBlocked = false;
+  let isFollowing = false;
+  let isFollowingSent = false;
 
+  const { userId: currentUserId } = auth();
+
+  if (currentUserId) {
+    const blockRes = await prisma.block.findFirst({
+      where: {
+        blockerId: currentUserId,
+        blockedId: user.id,
+      },
+    });
+
+    blockRes ? (isUserBlocked = true) : (isUserBlocked = false);
+    const followRes = await prisma.follower.findFirst({
+      where: {
+        followerId: currentUserId,
+        followingId: user.id,
+      },
+    });
+
+    followRes ? (isFollowing = true) : (isFollowing = false);
+    const followReqRes = await prisma.followRequest.findFirst({
+      where: {
+        senderId: currentUserId,
+        recieverId: user.id,
+      },
+    });
+
+    followReqRes ? (isFollowingSent = true) : (isFollowingSent = false);
+  }
   return (
     <div className="p-4 shadow-md rounded-sm bg-white flex flex-col gap-2">
-      <UpdateInteraction userId={userId}/>
+      <UpdateInteraction users={user} covers={currentUser?.cover} />
       <div className="flex gap-1 items-center ">
         <p className="font-semibold">
-          {user.name && user.surname
-            ? user.name + " " + user.surname
-            : user.username}
+          {users.name && users.surname
+            ? users.name + " " + users.surname
+            : users.username}
         </p>{" "}
         <span className="text-[.72rem] text-gray-400">
-          {user.name && user.surname ? "@" + user.username : ""}
+          {users.name && users.surname ? "@" + users.username : ""}
         </span>
       </div>
       <div className="text-[.71rem]">
-        {user.description ? user.description : ""}
+        {users.description ? users.description : ""}
       </div>
       <div>
-        {user.city ? (
+        {users.city ? (
           <p className="text-[.72rem] flex gap-1 items-center tracking-wide">
             <Image src="/map.png" alt="pngs" width={12} height={12} /> Living in{" "}
-            <span className="font-semibold">{user.city}</span>
+            <span className="font-semibold">{users.city}</span>
           </p>
         ) : null}
-        {user.school ? (
+        {users.school ? (
           <p className="text-[.72rem] flex gap-1 items-center tracking-wide">
             <Image src="/school.png" alt="pngs" width={12} height={12} /> went
-            to <span className="font-semibold">{user.school}</span>
+            to <span className="font-semibold">{users.school}</span>
           </p>
         ) : null}
-        {user.work ? (
+        {users.work ? (
           <p className="text-[.72rem] flex gap-1 items-center tracking-wide">
             <Image src="/work.png" alt="pngs" width={12} height={12} /> works at
-            <span className="font-semibold">{user.work}</span>
+            <span className="font-semibold">{users.work}</span>
           </p>
         ) : null}
 
         <div className="flex justify-between mt-2">
-          {user.website ? (
+          {users.website ? (
             <Link
               href="codezbit.com"
               className="text-blue-500 text-[.68rem] font-semibold flex gap-[.1rem] items-center"
             >
               <Image src="/link.png" alt="imsg" width={12} height={12} />
-              {user.website}
+              {users.website}
             </Link>
           ) : null}
           <span className="flex items-center gap-1 text-[.65rem]">
@@ -89,12 +124,12 @@ const UserDetails: React.FC<UserDetailsProps> = async ({ path }) => {
           </span>
         </div>
       </div>
-      {user.username && user.username !== path ? (
+      {users.username && users.username !== currentUser?.username ? (
         <UserDetailInteraction
-          userId={user.id}
+          userId={users.id}
+          isUserBlocked={isUserBlocked}
           isFollowing={isFollowing}
-          isFollowSent={isFollowSent}
-          isBlocked={isBlocked}
+          isFollowingSent={isFollowingSent}
         />
       ) : null}
     </div>

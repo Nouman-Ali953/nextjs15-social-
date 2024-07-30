@@ -2,15 +2,20 @@ import React from "react";
 import Image from "next/image";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
+import { User } from "@prisma/client";
 
-const UserGalary = async () => {
+const UserGalary = async ({ user }: { user: User }) => {
+
   const { userId: currentUserId } = auth();
   if (!currentUserId) {
     return null;
   }
+  if (!user) {
+    return null;
+  }
   const userImages = await prisma.post.findMany({
     where: {
-      userId: currentUserId,
+      userId: user.id!,
       img: {
         not: null,
       },
@@ -30,7 +35,7 @@ const UserGalary = async () => {
       </div>
       <div className="flex flex-row flex-wrap gap-[1.4rem]">
         {userImages.length ? (
-          userImages.map((postImage,index) => (
+          userImages.map((postImage, index) => (
             <div className="relative w-20 h-24" key={index}>
               <Image
                 src={postImage.img!}

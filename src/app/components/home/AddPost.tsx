@@ -33,7 +33,7 @@ const AddPost = () => {
             />
             <form
               action={(formData) =>
-                addUserPost(postimage?.secure_url || "", formData)
+                addUserPost(postimage?.secure_url , formData)
               }
               className="flex flex-row w-full gap-4 px-4 items-center"
             >

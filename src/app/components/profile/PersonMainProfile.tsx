@@ -5,28 +5,53 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import UserLoader from "../loadings/UserLoader";
-// import dynamic from "next/dynamic";
-// const UserLoader = dynamic(import("../loadings/UserLoader"))
-const PersonMainProfile = async ({ basePath }: { basePath: string | null }) => {
+import { User } from "@prisma/client";
+
+const PersonMainProfile = async ({
+  user,
+  basePath,
+}: {
+  user: User;
+  basePath: string | null;
+}) => {
   const { userId } = auth();
   if (!userId) {
     return null;
   }
-  const user = await prisma.user.findFirst({
-    where: {
-      id: userId,
-    },
-    include: {
-      _count: {
-        select: {
-          followers: true,
-          followings: true,
-          posts: true,
+  let users;
+  if (basePath) {
+    users = await prisma.user.findFirst({
+      where: {
+        username: user.username,
+      },
+      include: {
+        _count: {
+          select: {
+            followers: true,
+            followings: true,
+            posts: true,
+          },
         },
       },
-    },
-  });
-  if (!user) {
+    });
+  } else {
+    users = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        _count: {
+          select: {
+            followers: true,
+            followings: true,
+            posts: true,
+          },
+        },
+      },
+    });
+  }
+
+  if (!users) {
     return notFound();
   }
 
@@ -37,7 +62,7 @@ const PersonMainProfile = async ({ basePath }: { basePath: string | null }) => {
           <div className="relative w-full">
             <div className={`relative w-full ${basePath ? "h-60" : "h-20"} `}>
               <Image
-                src={user?.cover || "/noCover.png"}
+                src={users?.cover || "/noCover.png"}
                 alt="userimage"
                 layout="fill"
                 className="object-cover rounded-lg"
@@ -45,7 +70,7 @@ const PersonMainProfile = async ({ basePath }: { basePath: string | null }) => {
             </div>
             <div className="relative w-full flex flex-col gap-2 items-center bg-white">
               <Image
-                src={user?.avatar || "/noAvatar.png"}
+                src={users?.avatar || "/noAvatar.png"}
                 alt="userimage"
                 width={64}
                 height={64}
@@ -58,9 +83,9 @@ const PersonMainProfile = async ({ basePath }: { basePath: string | null }) => {
                   basePath ? "mt-12" : "mt-6 w-full"
                 } font-bold text-lg text-center flex flex-row justify-center`}
               >
-                {user.name && user.surname
-                  ? user.name + " " + user.surname
-                  : user.username}
+                {users.name && users.surname
+                  ? users.name + " " + users.surname
+                  : users.username}
               </span>
             </div>
           </div>
@@ -72,22 +97,22 @@ const PersonMainProfile = async ({ basePath }: { basePath: string | null }) => {
             }  mt-10 pl-2  `}
           >
             <div className="flex flex-col justify-start items-center text-sm font-semibold">
-              <span className="text-sm">{user._count.posts}</span>
+              <span className="text-sm">{users._count.posts}</span>
               <p className="text-[.7rem] text-gray-500">Posts</p>
             </div>
             <div className="flex flex-col justify-start items-center text-sm font-semibold">
-              <span className="text-sm">{user._count.followings}</span>
+              <span className="text-sm">{users._count.followings}</span>
               <p className="text-[.7rem] text-gray-500">Followers</p>
             </div>
             <div className="flex flex-col justify-start items-center text-sm font-semibold">
-              <span className="text-sm">{user._count.followers}</span>
+              <span className="text-sm">{users._count.followers}</span>
               <p className="text-[.7rem] text-gray-500">Followings</p>
             </div>
           </div>
 
           <div className={`${basePath ? "hidden" : "flex"} w-full`}>
             <p className="w-full text-center mt-3 text-[.75rem]">
-              {user._count.followings} followers
+              {users._count.followings} followers
             </p>
           </div>
           <div
@@ -95,7 +120,7 @@ const PersonMainProfile = async ({ basePath }: { basePath: string | null }) => {
               basePath ? "hidden" : "flex"
             } w-full relative bottom-8`}
           >
-            <Link href={`/profile/${user.username}`} className="w-full">
+            <Link href={`/profile/${users.username}`} className="w-full">
               <button className="mb-5 w-full text-[.79rem] bg-blue-500 py-[.28rem] rounded-[3px] px-2 text-white tracking-wide">
                 My Profile
               </button>
